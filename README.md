@@ -18,6 +18,7 @@ curl -v -X POST \
 'https://Your-domain-name' \
 -d $'{"sub": "テスト", "mes": "動作異常なし。"}'
 ```
-__メール__
+* __メール__
+
 <img src="images/apicf16.png" width="30%">
 

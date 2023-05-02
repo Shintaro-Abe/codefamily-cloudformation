@@ -9,7 +9,7 @@ API GatewayとLambdaの挙動を確認するための、シンプルな構成。
 * API Gatewayへメールのタイトルと本文を指定してアクセスをすると、SNSトピックのサブスクリプションへメールを送信
 * 送信に成功すると、サブジェクトとメッセージの値をレスポンス。
 
-![](/images/api-cf.drawio.png =500x)
+![](README.md/images/api-cf.drawio.png =500x)
 
 * __コマンド__
 

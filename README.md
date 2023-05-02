@@ -9,12 +9,12 @@ API GatewayとLambdaの挙動を確認するための、シンプルな構成。
 * API Gatewayへメールのタイトルと本文を指定してアクセスをすると、SNSトピックのサブスクリプションへメールを送信
 * 送信に成功すると、サブジェクトとメッセージの値をレスポンス。
 
-<img src="images/api-cf.drawio.png" width="30%">
+<img src="images/api-cf.drawio.png" width="50%">
 
 * __コマンド__
 
 ```
-curl -v -X POST \
+curl -X POST \
 'https://Your-domain-name' \
 -d $'{"sub": "テスト", "mes": "動作異常なし。"}'
 ```

@@ -1,6 +1,7 @@
 # codefamily-cloudformation
 ## Refferemce article
 Zennに投稿した、「CodePipelineとCloudformationで、API Gatewayをビルド【CodeFamily Practices 5/7】」に掲載したコードを収録したリポジトリ。
+
 <a href="https://zenn.dev/lifewithpiano/articles/codefamily_cloudformation"><img src="images/codefamily_cloudformation_zenn.png" width="50%">
 ## Summary
 API GatewayとLambdaの挙動を確認するための、シンプルな構成。

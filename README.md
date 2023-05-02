@@ -20,5 +20,5 @@ curl -X POST \
 ```
 * __メール__
 
-<img src="images/apicf16.png" width="30%">
+<img src="images/apicf16.png" width="50%">
 

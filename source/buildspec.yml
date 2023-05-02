@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+
+  build:
+    commands:
+      - aws cloudformation package 
+        --template api-sns.yml 
+        --s3-bucket layers-bucket123456789        #パッケージを格納するS3バケットを指定
+        --output-template-file packaged-api-sns.yml
+      - aws cloudformation deploy 
+        --template-file packaged-api-sns.yml 
+        --stack-name Serverless 
+        --capabilities CAPABILITY_NAMED_IAM       #作成したロールを使用する場合は_NAMED_が必要

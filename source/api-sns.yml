@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sending emails from SNS with Lambda.
+Parameters:
+  LambdaFunctionName:
+    Type: String
+    Default: Api-Lambda-CloudFormation
+Resources:
+  #SNSの作成
+  ApiSns:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: api-notification
+      DisplayName: Notification
+      Subscription: 
+        - Endpoint: zennzennzenn-SE@gmail.com
+          Protocol: email
+  #Lambdaの実行ロール
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: api-sns
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: lambda-logging
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*  
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Join 
+                - ''
+                - - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/
+                  - !Ref LambdaFunctionName
+                  - :*
+        - PolicyName: lambda-sns
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - sns:Publish
+                Resource:
+                  - !GetAtt ApiSns.TopicArn
+  #APIGatewayの作成
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration: 
+        Type: REGIONAL
+      StageName: prod
+      #ホストゾーンとACM証明書はすでに存在するリソースを使用
+      Domain: 
+        DomainName: Your-domain-name
+        CertificateArn: !Sub arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/z26y25x24w23v22u21
+        Route53:
+          HostedZoneId: 1a2b3c4d5e6f7g
+  #Lambdaの作成
+  ApiFunction: 
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref LambdaFunctionName
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: any
+            RestApiId:
+              Ref: ApiGatewayApi
+      Runtime: python3.9
+      Handler: sns.handler
+      Environment: 
+        Variables:
+          topic: !GetAtt ApiSns.TopicArn
+      CodeUri: sns.py
+      Role: !GetAtt LambdaRole.Arn
